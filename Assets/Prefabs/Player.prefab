@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6405193313384001893}
   - component: {fileID: 4478466527684581610}
   - component: {fileID: 2966980831313720211}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Capsule
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -122,7 +122,7 @@ GameObject:
   - component: {fileID: 4426415147747154682}
   - component: {fileID: 2074402133151154374}
   - component: {fileID: 1127737403403123027}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -227,7 +227,7 @@ GameObject:
   - component: {fileID: 8290507087089981460}
   - component: {fileID: 8837840113738689042}
   - component: {fileID: 1640729808077221205}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +332,7 @@ GameObject:
   - component: {fileID: 2795629939045142821}
   - component: {fileID: 2217481995157699920}
   - component: {fileID: 8206072476135501924}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -436,9 +436,9 @@ GameObject:
   - component: {fileID: 4610958190364223769}
   - component: {fileID: 6980673147760615924}
   - component: {fileID: 6648730261966752038}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -471,7 +471,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 91b9285838e059443bf018a9ef4f9120, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}
   cameraOffset: {x: -10, y: 12, z: -10}
 --- !u!114 &6648730261966752038
 MonoBehaviour:
@@ -485,4 +484,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a65ebcf94ab4cc3409ba6721068e5f94, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainCamera: {fileID: 0}

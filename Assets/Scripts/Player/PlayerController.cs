@@ -1,13 +1,15 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class PlayerController : MonoBehaviour {
     private Camera mainCamera;
 
     private GameObject cube;
-    private Vector3? targetPosition;
+    private NavMeshAgent agent;
 
     void Start() {
         mainCamera = Camera.main;
+        agent = GetComponent<NavMeshAgent>();
     }
 
     void Update() {
@@ -22,16 +24,10 @@ public class PlayerController : MonoBehaviour {
                 }
                 cube.transform.position = hit.point;
                 cube.GetComponent<Renderer>().material.color = Color.red;
-                targetPosition = hit.point;
+                if (agent) {
+                    agent.SetDestination(hit.point);
+                }
             }
-        }
-
-        if (targetPosition.HasValue) {
-            var dist = Vector3.Distance(targetPosition.Value, transform.position);
-            var speedMultiplier = Mathf.SmoothStep(0, 1, dist);
-            transform.position += (targetPosition.Value - transform.position).normalized * speedMultiplier * Time.deltaTime * 5.0f;
-
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(targetPosition.Value - transform.position), Time.deltaTime * 5.0f);
         }
     }
 }
