@@ -1,22 +1,17 @@
 using UnityEngine;
 
-public class CameraController : MonoBehaviour
-{
+public class CameraController : MonoBehaviour {
     private Camera mainCamera;
 
     [SerializeField]
     private Vector3 cameraOffset;
 
-    private void Start()
-    {
+    private void Start() {
         mainCamera = Camera.main;
     }
 
-
-    void Update()
-    {
-        if (mainCamera != null)
-        {
+    void Update() {
+        if (mainCamera != null) {
             mainCamera.transform.position = gameObject.transform.position + cameraOffset;
             mainCamera.transform.LookAt(gameObject.transform.position);
         }
