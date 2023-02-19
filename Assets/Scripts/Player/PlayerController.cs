@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour {
     private GameObject cube;
     private NavMeshAgent agent;
 
+    [SerializeField]
+    PlayerState state;
+
     void Start() {
         mainCamera = Camera.main;
         agent = GetComponent<NavMeshAgent>();
@@ -29,5 +32,9 @@ public class PlayerController : MonoBehaviour {
                 }
             }
         }
+        if(Input.GetKeyDown(KeyCode.Q)) {
+            state.changeMana(-10);
+        }
+       
     }
 }
