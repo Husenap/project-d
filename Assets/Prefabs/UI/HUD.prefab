@@ -252,6 +252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   manaLabel: {fileID: 3893866265550115200}
+  healthLabel: {fileID: 6945139373074454821}
 --- !u!1 &8494955031424213184
 GameObject:
   m_ObjectHideFlags: 0
