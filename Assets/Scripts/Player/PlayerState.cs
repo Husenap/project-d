@@ -1,13 +1,13 @@
+using System;
 using UnityEngine;
 
 public class PlayerState : MonoBehaviour {
-    private int _mana = 100;
-    [SerializeField]
-    UIManagement management;
+    private int mana = 100;
+
+    public static Action<int> manaChangedAction;
 
     public void changeMana(int offset) {
-        _mana += offset;
-        management.updateMana(this._mana);
+        mana += offset;
+        manaChangedAction(mana);
     }
-
 }

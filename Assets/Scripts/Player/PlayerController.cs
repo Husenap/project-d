@@ -1,40 +1,39 @@
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.EventSystems;
 
+[RequireComponent(typeof(PlayerState))]
 public class PlayerController : MonoBehaviour {
     private Camera mainCamera;
-
-    private GameObject cube;
     private NavMeshAgent agent;
+    private PlayerState state;
 
-    [SerializeField]
-    PlayerState state;
+    private GameObject debugCube;
 
     void Start() {
         mainCamera = Camera.main;
         agent = GetComponent<NavMeshAgent>();
+        state = GetComponent<PlayerState>();
     }
 
     void Update() {
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) {
             var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit)) {
-                Debug.Log(hit.transform.gameObject.name + ": " + hit.point);
-
-                if (cube == null) {
-                    cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    cube.transform.localScale = Vector3.one * 0.1f;
+                if (debugCube) {
+                    debugCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    debugCube.transform.localScale = Vector3.one * 0.1f;
                 }
-                cube.transform.position = hit.point;
-                cube.GetComponent<Renderer>().material.color = Color.red;
+                debugCube.transform.position = hit.point;
+                debugCube.GetComponent<Renderer>().material.color = Color.red;
                 if (agent) {
                     agent.SetDestination(hit.point);
                 }
             }
         }
-        if(Input.GetKeyDown(KeyCode.Q)) {
+
+        if (Input.GetKeyDown(KeyCode.Q)) {
             state.changeMana(-10);
         }
-       
     }
 }

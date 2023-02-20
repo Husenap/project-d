@@ -1,18 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class UIManagement : MonoBehaviour
-{
+public class UIManagement : MonoBehaviour {
     [SerializeField]
-    TextMeshProUGUI mana;
+    private TextMeshProUGUI manaLabel;
+
+    private void Start() {
+        PlayerState.manaChangedAction += updateMana;
+    }
 
     public void updateMana(int current) {
-        if(this.mana != null) {
-            this.mana.text = $"Mana: {current}";
+        if (manaLabel) {
+            manaLabel.text = $"Mana: {current}";
         }
-        
     }
 }
