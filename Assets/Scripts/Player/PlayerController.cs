@@ -20,7 +20,7 @@ public class PlayerController : MonoBehaviour {
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) {
             var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit)) {
-                if (debugCube) {
+                if (!debugCube) {
                     debugCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                     debugCube.transform.localScale = Vector3.one * 0.1f;
                 }
