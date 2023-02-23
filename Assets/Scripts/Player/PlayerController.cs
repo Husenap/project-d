@@ -1,9 +1,10 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(PlayerState))]
-public class PlayerController : MonoBehaviour {
+public class PlayerController : NetworkBehaviour {
     private Camera mainCamera;
     private NavMeshAgent agent;
     private PlayerState state;
@@ -17,6 +18,9 @@ public class PlayerController : MonoBehaviour {
     }
 
     void Update() {
+        if (!IsOwner)
+            return;
+
         if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject()) {
             var ray = mainCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out RaycastHit hit)) {
@@ -36,4 +40,5 @@ public class PlayerController : MonoBehaviour {
             state.changeMana(-10);
         }
     }
+
 }
