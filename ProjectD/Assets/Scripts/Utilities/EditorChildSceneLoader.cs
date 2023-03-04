@@ -11,10 +11,6 @@ public class EditorChildSceneLoader : MonoBehaviour {
     [SerializeField]
     public List<SceneAsset> ChildScenesToLoadConfig;
 
-    void Update() {
-        // DO NOT DELETE keep this so we can enable/disable this script... (used in ChildSceneLoader)
-    }
-
     public void SaveSceneSetup() {
         ChildScenesToLoadConfig ??= new List<SceneAsset>();
         ChildScenesToLoadConfig.Clear();
