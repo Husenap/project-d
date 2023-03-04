@@ -72,7 +72,7 @@ namespace PD
                 {
                     ""name"": """",
                     ""id"": ""a6ac9940-8586-4aa4-9c07-a26243b2ec4e"",
-                    ""path"": ""<Keyboard>/q"",
+                    ""path"": ""<Keyboard>/1"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -83,7 +83,7 @@ namespace PD
                 {
                     ""name"": """",
                     ""id"": ""09b12a11-6669-4804-a554-781fa14e0c14"",
-                    ""path"": ""<Keyboard>/w"",
+                    ""path"": ""<Keyboard>/2"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -114,6 +114,15 @@ namespace PD
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CameraMovement"",
+                    ""type"": ""Value"",
+                    ""id"": ""881f4a93-10cf-48c9-8cc9-676f9b195dc9"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": ""ScaleVector2(x=10,y=10)"",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -138,6 +147,61 @@ namespace PD
                     ""action"": ""CameraRotation"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""6427087a-5e0b-4c0b-81f2-5736e973609e"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMovement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""eb39f5b6-2526-46e6-8f8d-3ddd54a6e964"",
+                    ""path"": ""<Keyboard>/w"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""45be9654-7581-461d-86c7-d8870281167d"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""771ec171-80cf-43d1-995f-71f7973fc03c"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""1d75c5a1-6073-4780-972e-9cabde4a3d7d"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraMovement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
                 }
             ]
         },
@@ -730,6 +794,7 @@ namespace PD
             m_CameraController = asset.FindActionMap("CameraController", throwIfNotFound: true);
             m_CameraController_RotateCamera = m_CameraController.FindAction("RotateCamera", throwIfNotFound: true);
             m_CameraController_CameraRotation = m_CameraController.FindAction("CameraRotation", throwIfNotFound: true);
+            m_CameraController_CameraMovement = m_CameraController.FindAction("CameraMovement", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -867,12 +932,14 @@ namespace PD
         private List<ICameraControllerActions> m_CameraControllerActionsCallbackInterfaces = new List<ICameraControllerActions>();
         private readonly InputAction m_CameraController_RotateCamera;
         private readonly InputAction m_CameraController_CameraRotation;
+        private readonly InputAction m_CameraController_CameraMovement;
         public struct CameraControllerActions
         {
             private @Input m_Wrapper;
             public CameraControllerActions(@Input wrapper) { m_Wrapper = wrapper; }
             public InputAction @RotateCamera => m_Wrapper.m_CameraController_RotateCamera;
             public InputAction @CameraRotation => m_Wrapper.m_CameraController_CameraRotation;
+            public InputAction @CameraMovement => m_Wrapper.m_CameraController_CameraMovement;
             public InputActionMap Get() { return m_Wrapper.m_CameraController; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -888,6 +955,9 @@ namespace PD
                 @CameraRotation.started += instance.OnCameraRotation;
                 @CameraRotation.performed += instance.OnCameraRotation;
                 @CameraRotation.canceled += instance.OnCameraRotation;
+                @CameraMovement.started += instance.OnCameraMovement;
+                @CameraMovement.performed += instance.OnCameraMovement;
+                @CameraMovement.canceled += instance.OnCameraMovement;
             }
 
             private void UnregisterCallbacks(ICameraControllerActions instance)
@@ -898,6 +968,9 @@ namespace PD
                 @CameraRotation.started -= instance.OnCameraRotation;
                 @CameraRotation.performed -= instance.OnCameraRotation;
                 @CameraRotation.canceled -= instance.OnCameraRotation;
+                @CameraMovement.started -= instance.OnCameraMovement;
+                @CameraMovement.performed -= instance.OnCameraMovement;
+                @CameraMovement.canceled -= instance.OnCameraMovement;
             }
 
             public void RemoveCallbacks(ICameraControllerActions instance)
@@ -1088,6 +1161,7 @@ namespace PD
         {
             void OnRotateCamera(InputAction.CallbackContext context);
             void OnCameraRotation(InputAction.CallbackContext context);
+            void OnCameraMovement(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {

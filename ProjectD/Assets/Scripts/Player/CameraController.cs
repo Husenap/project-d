@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-public class CameraController : MonoBehaviour, PD.Input.ICameraControllerActions {
+public class CameraController : MonoBehaviour {
     [SerializeField] private Vector3 focusOffset;
     [SerializeField] private float nearCameraHeight;
     [SerializeField] private float nearCameraDistance;
@@ -19,6 +19,7 @@ public class CameraController : MonoBehaviour, PD.Input.ICameraControllerActions
 
     private float cameraHeight;
     private float cameraDistance;
+    private Vector3 position;
 
     private Volume volume;
 
@@ -26,7 +27,6 @@ public class CameraController : MonoBehaviour, PD.Input.ICameraControllerActions
 
     private void OnEnable() {
         input ??= new PD.Input();
-        input.CameraController.SetCallbacks(this);
         input.CameraController.Enable();
     }
     private void OnDisable() {
@@ -52,9 +52,14 @@ public class CameraController : MonoBehaviour, PD.Input.ICameraControllerActions
         if (input.CameraController.RotateCamera.IsPressed()) {
             angleTarget += input.CameraController.CameraRotation.ReadValue<float>();
         }
+
+        var movement = input.CameraController.CameraMovement.ReadValue<Vector2>() * Time.deltaTime;
+        position += cam.transform.right * movement.x;
+        position += Vector3.Cross(cam.transform.right, Vector3.up) * movement.y;
+
         if (cam) {
             var cameraOffset = new Vector3(cameraDistance * Mathf.Cos(Mathf.Deg2Rad * angle), cameraHeight, cameraDistance * Mathf.Sin(Mathf.Deg2Rad * angle));
-            var focusPoint = transform.position + focusOffset;
+            var focusPoint = transform.position + focusOffset + position;
 
             cam.transform.position = focusPoint + cameraOffset;
             cam.transform.LookAt(focusPoint);
@@ -70,13 +75,5 @@ public class CameraController : MonoBehaviour, PD.Input.ICameraControllerActions
             angle = Mathf.Lerp(angle, angleTarget, Time.deltaTime * 10.0f);
             UpdateHeightAndDistance();
         }
-    }
-
-    public void OnRotateCamera(InputAction.CallbackContext context) {
-        throw new System.NotImplementedException();
-    }
-
-    public void OnCameraRotation(InputAction.CallbackContext context) {
-        throw new System.NotImplementedException();
     }
 }

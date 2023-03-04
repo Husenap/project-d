@@ -3,7 +3,7 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour, PD.Input.IPlayerControllerActions {
+public class PlayerController : MonoBehaviour {
     private Camera cam;
 
     private NavMeshAgent agent;
@@ -15,24 +15,11 @@ public class PlayerController : MonoBehaviour, PD.Input.IPlayerControllerActions
 
     private void OnEnable() {
         input ??= new PD.Input();
-        input.PlayerController.SetCallbacks(this);
         input.PlayerController.Enable();
     }
 
     private void OnDisable() {
         input?.PlayerController.Disable();
-    }
-
-    public void OnAbility1(InputAction.CallbackContext context) {
-        state.changeMana(-1);
-    }
-
-    public void OnAbility2(InputAction.CallbackContext context) {
-        state.changeHealth(-1);
-    }
-
-    public void OnMove(InputAction.CallbackContext context) {
-        throw new System.NotImplementedException();
     }
 
     void Start() {
@@ -56,6 +43,13 @@ public class PlayerController : MonoBehaviour, PD.Input.IPlayerControllerActions
                     agent.SetDestination(hit.point);
                 }
             }
+        }
+
+        if (input.PlayerController.Ability1.WasPerformedThisFrame()) {
+            state.changeMana(-1);
+        }
+        if (input.PlayerController.Ability2.WasPerformedThisFrame()) {
+            state.changeHealth(-1);
         }
     }
 
