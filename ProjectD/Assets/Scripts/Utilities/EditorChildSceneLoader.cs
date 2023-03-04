@@ -71,8 +71,6 @@ public class ChildSceneLoader {
                 return;
 
             scenesToLoadObjects[0].ResetSceneSetupToConfig();
-
-            Debug.Log("Setup done for root scene and child scenes");
         };
     }
 }
