@@ -3,31 +3,48 @@ using UnityEngine.AI;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour {
-    private Camera mainCamera;
+public class PlayerController : MonoBehaviour, PD.Input.IPlayerControllerActions {
+    private Camera cam;
+
     private NavMeshAgent agent;
     private PlayerState state;
-    private PlayerInput playerInput;
-
-    private InputAction moveAction;
 
     private GameObject debugCube;
 
+    private PD.Input input;
+
+    private void OnEnable() {
+        input ??= new PD.Input();
+        input.PlayerController.SetCallbacks(this);
+        input.PlayerController.Enable();
+    }
+
+    private void OnDisable() {
+        input?.PlayerController.Disable();
+    }
+
+    public void OnAbility1(InputAction.CallbackContext context) {
+        state.changeMana(-1);
+    }
+
+    public void OnAbility2(InputAction.CallbackContext context) {
+        state.changeHealth(-1);
+    }
+
+    public void OnMove(InputAction.CallbackContext context) {
+        throw new System.NotImplementedException();
+    }
+
     void Start() {
-        mainCamera = Camera.main;
+        cam = GetComponentInChildren<Camera>();
+
         agent = GetComponent<NavMeshAgent>();
         state = GetComponent<PlayerState>();
-        playerInput = GetComponent<PlayerInput>();
-
-        moveAction = playerInput.actions["Player/Move"];
-
-        playerInput.actions["Player/Ability1"].performed += _ => state.changeMana(-1);
-        playerInput.actions["Player/Ability2"].performed += _ => state.changeHealth(-1);
     }
 
     private void Update() {
-        if (moveAction.WasPerformedThisFrame() && !EventSystem.current.IsPointerOverGameObject()) {
-            var ray = mainCamera.ScreenPointToRay(Mouse.current.position.value);
+        if (input.PlayerController.Move.WasPerformedThisFrame() && !EventSystem.current.IsPointerOverGameObject()) {
+            var ray = cam.ScreenPointToRay(Mouse.current.position.value);
             if (Physics.Raycast(ray, out RaycastHit hit)) {
                 if (!debugCube) {
                     debugCube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -41,4 +58,6 @@ public class PlayerController : MonoBehaviour {
             }
         }
     }
+
+
 }

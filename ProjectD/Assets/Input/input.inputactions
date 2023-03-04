@@ -1,8 +1,8 @@
 {
-    "name": "input",
+    "name": "Input",
     "maps": [
         {
-            "name": "Player",
+            "name": "PlayerController",
             "id": "52278508-d8c4-491a-ba3a-f523e9f8be1a",
             "actions": [
                 {
@@ -64,6 +64,54 @@
                     "processors": "",
                     "groups": "",
                     "action": "Ability2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "CameraController",
+            "id": "d8831128-d17f-498e-ba90-0645a2aba272",
+            "actions": [
+                {
+                    "name": "RotateCamera",
+                    "type": "Button",
+                    "id": "fb8b6818-2cc3-454b-9317-6dbbdfeb47b4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "CameraRotation",
+                    "type": "Value",
+                    "id": "b0879834-cab4-4385-abde-3e441e3e0ce7",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "be8199d2-058b-4162-90a3-d846f1b63c81",
+                    "path": "<Mouse>/middleButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard&Mouse",
+                    "action": "RotateCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "d848b776-c0ab-4ec1-8132-13a3968d1e8d",
+                    "path": "<Mouse>/delta/x",
+                    "interactions": "",
+                    "processors": "Scale(factor=0.1),Invert",
+                    "groups": "Keyboard&Mouse",
+                    "action": "CameraRotation",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
