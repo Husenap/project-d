@@ -123,6 +123,15 @@ namespace PD
                     ""processors"": ""ScaleVector2(x=10,y=10)"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CenterCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""04892ff4-f1e8-40e3-aa6b-33274924db72"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -202,6 +211,17 @@ namespace PD
                     ""action"": ""CameraMovement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8a008d32-8147-4864-9212-85d3ef643011"",
+                    ""path"": ""<Keyboard>/home"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CenterCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         },
@@ -795,6 +815,7 @@ namespace PD
             m_CameraController_RotateCamera = m_CameraController.FindAction("RotateCamera", throwIfNotFound: true);
             m_CameraController_CameraRotation = m_CameraController.FindAction("CameraRotation", throwIfNotFound: true);
             m_CameraController_CameraMovement = m_CameraController.FindAction("CameraMovement", throwIfNotFound: true);
+            m_CameraController_CenterCamera = m_CameraController.FindAction("CenterCamera", throwIfNotFound: true);
             // UI
             m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
             m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -933,6 +954,7 @@ namespace PD
         private readonly InputAction m_CameraController_RotateCamera;
         private readonly InputAction m_CameraController_CameraRotation;
         private readonly InputAction m_CameraController_CameraMovement;
+        private readonly InputAction m_CameraController_CenterCamera;
         public struct CameraControllerActions
         {
             private @Input m_Wrapper;
@@ -940,6 +962,7 @@ namespace PD
             public InputAction @RotateCamera => m_Wrapper.m_CameraController_RotateCamera;
             public InputAction @CameraRotation => m_Wrapper.m_CameraController_CameraRotation;
             public InputAction @CameraMovement => m_Wrapper.m_CameraController_CameraMovement;
+            public InputAction @CenterCamera => m_Wrapper.m_CameraController_CenterCamera;
             public InputActionMap Get() { return m_Wrapper.m_CameraController; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -958,6 +981,9 @@ namespace PD
                 @CameraMovement.started += instance.OnCameraMovement;
                 @CameraMovement.performed += instance.OnCameraMovement;
                 @CameraMovement.canceled += instance.OnCameraMovement;
+                @CenterCamera.started += instance.OnCenterCamera;
+                @CenterCamera.performed += instance.OnCenterCamera;
+                @CenterCamera.canceled += instance.OnCenterCamera;
             }
 
             private void UnregisterCallbacks(ICameraControllerActions instance)
@@ -971,6 +997,9 @@ namespace PD
                 @CameraMovement.started -= instance.OnCameraMovement;
                 @CameraMovement.performed -= instance.OnCameraMovement;
                 @CameraMovement.canceled -= instance.OnCameraMovement;
+                @CenterCamera.started -= instance.OnCenterCamera;
+                @CenterCamera.performed -= instance.OnCenterCamera;
+                @CenterCamera.canceled -= instance.OnCenterCamera;
             }
 
             public void RemoveCallbacks(ICameraControllerActions instance)
@@ -1162,6 +1191,7 @@ namespace PD
             void OnRotateCamera(InputAction.CallbackContext context);
             void OnCameraRotation(InputAction.CallbackContext context);
             void OnCameraMovement(InputAction.CallbackContext context);
+            void OnCenterCamera(InputAction.CallbackContext context);
         }
         public interface IUIActions
         {
