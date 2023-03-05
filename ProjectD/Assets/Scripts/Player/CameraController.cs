@@ -97,7 +97,7 @@ public class CameraController : MonoBehaviour {
     }
 
     private void FollowPlayer() {
-        position = transform.position;
+        position = positionTarget = transform.position;
     }
     private void FreeFly() {
         var movement = input.CameraController.CameraMovement.ReadValue<Vector2>() * Time.deltaTime;
