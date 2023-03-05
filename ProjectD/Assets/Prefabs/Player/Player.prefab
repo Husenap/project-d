@@ -475,12 +475,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   focusOffset: {x: 0, y: 1, z: 0}
-  nearCameraHeight: 2.5
+  nearCameraHeight: 1
   nearCameraDistance: 5
   farCameraHeight: 15
   farCameraDistance: 15
   angle: -135
-  zoom: 0.5
 --- !u!114 &6648730261966752038
 MonoBehaviour:
   m_ObjectHideFlags: 0
