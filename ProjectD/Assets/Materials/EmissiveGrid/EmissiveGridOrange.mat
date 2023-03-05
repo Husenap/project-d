@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: EmissiveGrid Variant
+  m_Name: EmissiveGridOrange
   m_Shader: {fileID: -6465566751694194690, guid: 50b4dfb71f980df468e66c49b31a4733,
     type: 3}
   m_Parent: {fileID: 2100000, guid: 3c21c5c624626e341bf951fef29f103f, type: 2}
