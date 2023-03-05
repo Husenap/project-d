@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -17,13 +18,22 @@ public class CameraController : MonoBehaviour {
     private float zoomTarget;
     private float angleTarget;
 
+    private Vector3 positionTarget;
+    private Vector3 position;
+
+
     private float cameraHeight;
     private float cameraDistance;
-    private Vector3 position;
 
     private Volume volume;
 
     private PD.Input input;
+
+    private enum CameraState {
+        FollowPlayer,
+        FreeFly
+    };
+    CameraState state = CameraState.FollowPlayer;
 
     private void OnEnable() {
         input ??= new PD.Input();
@@ -36,16 +46,12 @@ public class CameraController : MonoBehaviour {
     private void Start() {
         cam = GetComponentInChildren<Camera>();
 
-        UpdateHeightAndDistance();
         volume = FindFirstObjectByType<Volume>();
 
         angleTarget = angle;
         zoomTarget = zoom;
-    }
 
-    private void UpdateHeightAndDistance() {
-        cameraHeight = Mathf.Lerp(nearCameraHeight, farCameraHeight, zoom * zoom);
-        cameraDistance = Mathf.Lerp(nearCameraDistance, farCameraDistance, zoom);
+        cam.transform.parent = null;
     }
 
     void Update() {
@@ -53,13 +59,30 @@ public class CameraController : MonoBehaviour {
             angleTarget += input.CameraController.CameraRotation.ReadValue<float>();
         }
 
-        var movement = input.CameraController.CameraMovement.ReadValue<Vector2>() * Time.deltaTime;
-        position += cam.transform.right * movement.x;
-        position += Vector3.Cross(cam.transform.right, Vector3.up) * movement.y;
+        if (input.CameraController.CameraMovement.WasPerformedThisFrame()) {
+            state = CameraState.FreeFly;
+        } else if (input.CameraController.CenterCamera.WasPerformedThisFrame()) {
+            state = CameraState.FollowPlayer;
+        }
+
+        switch (state) {
+            case CameraState.FollowPlayer:
+                FollowPlayer();
+                break;
+            case CameraState.FreeFly:
+                FreeFly();
+                break;
+        }
+
+        angle = Mathf.Lerp(angle, angleTarget, Time.deltaTime * 10.0f);
+        zoomTarget = Mathf.Clamp01(zoomTarget - Mouse.current.scroll.value.y / 1000.0f);
+        zoom = Mathf.Lerp(zoom, zoomTarget, Time.deltaTime * 10.0f);
+        cameraHeight = Mathf.Lerp(nearCameraHeight, farCameraHeight, zoom * zoom);
+        cameraDistance = Mathf.Lerp(nearCameraDistance, farCameraDistance, zoom);
 
         if (cam) {
             var cameraOffset = new Vector3(cameraDistance * Mathf.Cos(Mathf.Deg2Rad * angle), cameraHeight, cameraDistance * Mathf.Sin(Mathf.Deg2Rad * angle));
-            var focusPoint = transform.position + focusOffset + position;
+            var focusPoint = focusOffset + position;
 
             cam.transform.position = focusPoint + cameraOffset;
             cam.transform.LookAt(focusPoint);
@@ -70,10 +93,28 @@ public class CameraController : MonoBehaviour {
                     dof.focusDistance.Override((focusPoint - cam.transform.position).magnitude);
                 }
             }
-            zoomTarget = Mathf.Clamp01(zoomTarget - Mouse.current.scroll.value.y / 1000.0f);
-            zoom = Mathf.Lerp(zoom, zoomTarget, Time.deltaTime * 10.0f);
-            angle = Mathf.Lerp(angle, angleTarget, Time.deltaTime * 10.0f);
-            UpdateHeightAndDistance();
         }
+    }
+
+    private void FollowPlayer() {
+        position = transform.position;
+    }
+    private void FreeFly() {
+        var movement = input.CameraController.CameraMovement.ReadValue<Vector2>() * Time.deltaTime;
+
+        var right = cam.transform.right;
+        right.y = 0;
+        var forward = new Vector3(-right.z, 0, right.x);
+
+        positionTarget += movement.x * right + movement.y * forward;
+
+        if (NavMesh.SamplePosition(positionTarget, out NavMeshHit hit, float.MaxValue, NavMesh.AllAreas)) {
+            var pos = positionTarget;
+            pos.y = hit.position.y;
+
+            pos = hit.position + Vector3.ClampMagnitude(pos - hit.position, 5.0f);
+            positionTarget = pos;
+        }
+        position = Vector3.Lerp(position, positionTarget, Time.deltaTime * 10.0f);
     }
 }
