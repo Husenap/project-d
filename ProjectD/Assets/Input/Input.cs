@@ -120,7 +120,7 @@ namespace PD
                     ""type"": ""Value"",
                     ""id"": ""881f4a93-10cf-48c9-8cc9-676f9b195dc9"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": ""ScaleVector2(x=10,y=10)"",
+                    ""processors"": ""ScaleVector2(x=15,y=15)"",
                     ""interactions"": """",
                     ""initialStateCheck"": true
                 },
