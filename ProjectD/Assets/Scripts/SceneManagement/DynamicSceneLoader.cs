@@ -41,7 +41,6 @@ namespace PD {
 
         private void OnTriggerEnter(Collider other) {
             if (other.CompareTag("Player")) {
-                Debug.Log("Trigger enter");
                 ++counter;
 
                 if (unloadCoroutine != null) {
@@ -54,7 +53,6 @@ namespace PD {
 
         private void OnTriggerExit(Collider other) {
             if (other.CompareTag("Player")) {
-                Debug.Log("Trigger exit");
                 --counter;
             }
         }
