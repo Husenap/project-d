@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 2966980831313720211}
   m_Layer: 3
   m_Name: Capsule
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -460,7 +460,7 @@ Transform:
   - {fileID: 1376714058477419061}
   - {fileID: 2384789418906058460}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &6980673147760615924
 MonoBehaviour:
