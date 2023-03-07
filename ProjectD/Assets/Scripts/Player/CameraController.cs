@@ -121,7 +121,7 @@ public class CameraController : MonoBehaviour {
             var pos = positionTarget;
             pos.y = hit.position.y;
 
-            pos = hit.position + Vector3.ClampMagnitude(pos - hit.position, 5.0f);
+            pos = hit.position + Vector3.ClampMagnitude(pos - hit.position, 10.0f);
             positionTarget = pos;
         }
     }
