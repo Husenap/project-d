@@ -87,6 +87,14 @@ namespace PD {
                             bounds.Encapsulate(renderer.bounds);
                     }
                 }
+                foreach (var collider in go.GetComponentsInChildren<Collider>()) {
+                    if (collider) {
+                        if (bounds.extents == Vector3.zero)
+                            bounds = collider.bounds;
+                        else
+                            bounds.Encapsulate(collider.bounds);
+                    }
+                }
             }
             bounds.Expand(expansionAmount);
             return bounds;
