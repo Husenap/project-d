@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.SceneManagement;
@@ -14,7 +15,10 @@ namespace PD {
         private const string DYNAMIC_SCENE_LOADERS = "DynamicSceneLoaders";
 
         [SerializeField]
-        public List<SceneAsset> ChildScenesToLoadConfig;
+        private List<SceneAsset> ChildScenesToLoadConfig;
+
+        [SerializeField]
+        private float expansionAmount = 100.0f;
 
         public void SaveSceneSetup() {
             ChildScenesToLoadConfig ??= new List<SceneAsset>();
@@ -27,6 +31,7 @@ namespace PD {
             var dynamicSceneLoaders = GameObject.Find(DYNAMIC_SCENE_LOADERS);
             DestroyImmediate(dynamicSceneLoaders);
             dynamicSceneLoaders = new GameObject(DYNAMIC_SCENE_LOADERS);
+            dynamicSceneLoaders.transform.parent = transform;
 
             for (int i = 1; i < SceneManager.sceneCount; i++) {
                 var scene = SceneManager.GetSceneAt(i);
@@ -48,6 +53,10 @@ namespace PD {
                 var dynamicSceneLoader = sceneLoader.AddComponent<DynamicSceneLoader>();
                 dynamicSceneLoader.sceneName = scene.name;
             }
+
+            var navMesh = FindFirstObjectByType<NavMeshSurface>();
+            if (navMesh)
+                navMesh.BuildNavMesh();
         }
 
         public void ResetSceneSetupToConfig() {
@@ -79,7 +88,7 @@ namespace PD {
                     }
                 }
             }
-            bounds.Expand(10.0f);
+            bounds.Expand(expansionAmount);
             return bounds;
         }
 #endif
