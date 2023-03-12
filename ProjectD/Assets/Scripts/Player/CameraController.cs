@@ -62,6 +62,12 @@ public class CameraController : MonoBehaviour {
         if (input.CameraController.CameraMovement.WasPerformedThisFrame()) {
             state = CameraState.FreeFly;
         } else if (input.CameraController.CenterCamera.WasPerformedThisFrame()) {
+            angle = angle % 360.0f;
+            if (angle > 180.0f)
+                angle -= 360.0f;
+            if (angle < -180.0f)
+                angle += 360.0f;
+
             angleTarget = 0.0f;
             zoomTarget = 1.0f;
             positionTarget = transform.position;
@@ -87,7 +93,12 @@ public class CameraController : MonoBehaviour {
         angle = Mathf.Lerp(angle, angleTarget, Time.deltaTime * 10.0f);
         cameraHeight = Mathf.Lerp(nearCameraHeight, farCameraHeight, zoom);
         cameraDistance = Mathf.Lerp(nearCameraDistance, farCameraDistance, zoom);
-        position = Vector3.Lerp(position, positionTarget, Time.deltaTime * 20.0f);
+        {
+            var fastPosition = Vector3.Lerp(position, positionTarget, Time.deltaTime * 15.0f);
+            var slowPosition = Vector3.Lerp(position, positionTarget, Time.deltaTime * 7.5f);
+            position = new Vector3(fastPosition.x, slowPosition.y, fastPosition.z);
+        }
+
 
         if (cam) {
             var cameraOffset = new Vector3(cameraDistance * Mathf.Sin(Mathf.Deg2Rad * angle), cameraHeight, cameraDistance * -Mathf.Cos(Mathf.Deg2Rad * angle));
